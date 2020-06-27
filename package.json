@@ -1,0 +1,15 @@
+{
+  "name": "@geut/yafu",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build": "yarn lerna run build"
+  },
+  "dependencies": {
+    "lerna": "^3.22.1"
+  }
+}

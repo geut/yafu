@@ -1,0 +1,39 @@
+{
+  "name": "@geut/react-hast-content",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "files": [
+    "index.js",
+    "dist/"
+  ],
+  "scripts": {
+    "build": "npm run clean && babel ./src --out-dir ./dist/ --ignore \"**/*.test.js\" --source-maps inline",
+    "build:watch": "yarn run build --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "rehype-parse": "^7.0.1",
+    "rehype-stringify": "^8.0.0",
+    "rehype-react": "^6.0.0",
+    "unified": "^9.0.0",
+    "unist-util-select": "^3.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.0",
+    "@babel/core": "^7.10.0",
+    "@babel/plugin-proposal-class-properties": "^7.10.0",
+    "@babel/plugin-proposal-export-default-from": "^7.10.0",
+    "@babel/plugin-transform-runtime": "^7.10.0",
+    "@babel/preset-env": "^7.10.0",
+    "@babel/preset-react": "^7.10.0",
+    "babel-loader": "^8.0.0",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "babel-plugin-inline-import": "^3.0.0",
+    "react": "^16.13.1"    
+  },
+  "browserslist": "> 0.25%, not dead" 
+}
