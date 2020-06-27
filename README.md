@@ -28,7 +28,7 @@ The live demonstration featured the introduction of a complete computer hardware
 
 ## Examples
 
-- [blog-one](hyper://83d7795382799dca29feee40c78bd54a6e6dbf0808c62455e44aea645f33b444/)
+- [blog-one](hyper://83d7795382799dca29feee40c78bd54a6e6dbf0808c62455e44aea645f33b444/) hyper://83d7795382799dca29feee40c78bd54a6e6dbf0808c62455e44aea645f33b444/
 
 
 
