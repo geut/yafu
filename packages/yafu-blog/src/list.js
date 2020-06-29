@@ -23,7 +23,7 @@ export default function List ({ path }) {
 
   useEffect(() => {
     (async () => {
-      const files = await beaker.hyperdrive.query({ 
+      const files = await beaker.hyperdrive.query({
         path: [`${path}*.md`,`${path}**/*.md`],
         type: 'file'
       })
@@ -32,17 +32,24 @@ export default function List ({ path }) {
   }, [path])
 
   useEffect(() => {
-    Promise.all(files.map(async ({ path }) => {
+    const workers = []
+    Promise.all(files.map(async ({ path }, idx) => {
       const raw = await beaker.hyperdrive.readFile(path)
       return new Promise((resolve) => {
         const worker = new Worker()
+        workers.push(worker)
         worker.onmessage = function (event) {          
           resolve(event.data)
-          worker.terminate()
       };
        worker.postMessage({ raw, data: { path } })
       })
-    })).then(setPosts)
+    })).then(posts => {
+      setPosts(posts)
+    })
+
+    return () => {
+      workers.forEach(worker => worker.terminate())
+    }
   }, [files])
 
   return (
