@@ -4,8 +4,6 @@ module.exports = {
 
   entry: `${__dirname}/src/worker.js`,
 
-  devtool: 'cheap-module-eval-source-map',  
-
   output: {
     path: `${__dirname}/dist`,
     filename: 'hast.worker.js'
