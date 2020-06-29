@@ -31,7 +31,6 @@ export default function List ({ path }) {
     })()
   }, [path])
 
-
   useEffect(() => {
     Promise.all(files.map(async ({ path }) => {
       const raw = await beaker.hyperdrive.readFile(path)
@@ -39,6 +38,7 @@ export default function List ({ path }) {
         const worker = new Worker()
         worker.onmessage = function (event) {          
           resolve(event.data)
+          worker.terminate()
       };
        worker.postMessage({ raw, data: { path } })
       })
