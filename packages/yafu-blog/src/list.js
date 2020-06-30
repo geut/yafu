@@ -42,8 +42,7 @@ export default function List ({ path }) {
       </div>
       <Container>
         <section className="list">
-          {console.log(files), files
-          .map(({ path }) => (
+          {files.map(({ path }) => (
             <Markdown key={path} path={path}>
               {(p => (
                 <article key={p.data.path}>
