@@ -9,39 +9,42 @@ import { dirname } from 'path'
 import Layout from './components/layout'
 import Container from './components/container'
 import Markdown from './components/markdown'
+import { useProperties } from './hooks/drive'
+import { getConfig } from './config'
 
 export default function List ({ path }) {
-  const [index, setIndex] = useState({})
   const [files, setFiles] = useState([])
+  const [drive] = useProperties()
 
   useEffect(() => {
     (async () => {
-      setIndex(await beaker.hyperdrive.readFile('/index.json', 'json'))      
-    })()
-  }, [])
-
-  useEffect(() => {
-    (async () => {
+      const config = await getConfig()
       const files = await beaker.hyperdrive.query({
         path: [`${path}*.md`,`${path}**/*.md`],
         type: 'file'
       })
-      setFiles(files)
+
+      setFiles(
+        files
+        .filter(config.filter)
+        .sort(config.sort)
+      )
     })()
   }, [path])
 
   return (
-    <Layout name={index.title} title={index.title}>
+    <Layout name={drive.title} title={drive.title}>
       <div className="header">
         <Container>
-          <Heading1>{index.title}</Heading1>
-          <p>{index.description}</p>
+          <Heading1>{drive.title}</Heading1>
+          <p>{drive.description}</p>
         </Container>
       </div>
       <Container>
         <section className="list">
-          {files.map(({ path }) => (
-            <Markdown path={path}>
+          {console.log(files), files
+          .map(({ path }) => (
+            <Markdown key={path} path={path}>
               {(p => (
                 <article key={p.data.path}>
                   <div className="category">

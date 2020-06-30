@@ -1,9 +1,13 @@
 import React from 'react' 
+import { Helmet } from "react-helmet";
 import { Paragraph, Anchor } from 'elems'
 
-export default function Layout({ name, showNav = false, children }) {
+export default function Layout({ name, title, showNav = false, children }) {
   return (
     <div className="root">
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       {showNav && (<nav><Anchor href="/">{name}</Anchor></nav>)}
       <main>
         {children}
