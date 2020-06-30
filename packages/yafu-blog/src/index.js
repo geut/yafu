@@ -11,9 +11,10 @@ ReactDOM.render(
         --base-line-height: calc(32 / 18);
         --spacing: 8px;
   
-        font-size: 16px;
-        --type-ratio: 1.333;
-        --h5-font-size: 1rem;
+        font-size: 18px;
+        --type-ratio: 1.250;
+        --h6-font-size: 1rem;
+        --h5-font-size: calc(var(--h6-font-size) * var(--type-ratio));
         --h4-font-size: calc(var(--h5-font-size) * var(--type-ratio));
         --h3-font-size: calc(var(--h4-font-size) * var(--type-ratio));
         --h2-font-size: calc(var(--h3-font-size) * var(--type-ratio));
