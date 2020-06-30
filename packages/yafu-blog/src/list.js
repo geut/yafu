@@ -3,17 +3,16 @@ import renderers from 'elems/renderers'
 import { Heading1, Heading2, Anchor } from 'elems'
 
 import Content from '@geut/react-hast-content'
-import Worker from '@geut/hast-worker'
 
 import { dirname } from 'path'
 
-import Layout from './layout'
-import Container from './container'
+import Layout from './components/layout'
+import Container from './components/container'
+import Markdown from './components/markdown'
 
 export default function List ({ path }) {
   const [index, setIndex] = useState({})
   const [files, setFiles] = useState([])
-  const [posts, setPosts] = useState([])
 
   useEffect(() => {
     (async () => {
@@ -31,27 +30,6 @@ export default function List ({ path }) {
     })()
   }, [path])
 
-  useEffect(() => {
-    const workers = []
-    Promise.all(files.map(async ({ path }, idx) => {
-      const raw = await beaker.hyperdrive.readFile(path)
-      return new Promise((resolve) => {
-        const worker = new Worker()
-        workers.push(worker)
-        worker.onmessage = function (event) {          
-          resolve(event.data)
-      };
-       worker.postMessage({ raw, data: { path } })
-      })
-    })).then(posts => {
-      setPosts(posts)
-    })
-
-    return () => {
-      workers.forEach(worker => worker.terminate())
-    }
-  }, [files])
-
   return (
     <Layout name={index.title} title={index.title}>
       <div className="header">
@@ -62,15 +40,19 @@ export default function List ({ path }) {
       </div>
       <Container>
         <section className="list">
-        {posts.map(p => (
-          <article key={p.data.path}>
-            <div className="category">
-              <Anchor href={dirname(p.data.path)}>{dirname(p.data.path)}</Anchor>
-            </div>
-            <Heading2><Anchor href={p.data.path}>{p.data.title}</Anchor></Heading2>
-            <Content  content={p.content} renderers={renderers} excerpt/>
-          </article>
-        ))}
+          {files.map(({ path }) => (
+            <Markdown path={path}>
+              {(p => (
+                <article key={p.data.path}>
+                  <div className="category">
+                    <Anchor href={dirname(p.data.path)}>{dirname(p.data.path)}</Anchor>
+                  </div>
+                  <Heading2><Anchor href={p.data.path}>{p.data.title}</Anchor></Heading2>
+                  <Content  content={p.content} renderers={renderers} excerpt/>
+                </article>
+              ))}
+            </Markdown>
+          ))}
         </section>
       </Container>
       <style jsx>{`
