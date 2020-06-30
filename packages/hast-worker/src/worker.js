@@ -15,10 +15,15 @@ const parser = unified()
 const extractTitle = (appendData) => {
   return () => /* attacher */ (tree) => {
     /* transformer */
-    const [first] = tree.children
-    if (first.type === 'heading' && first.depth === 1) {
+    const [first, second] = tree.children
+    if (first.type === 'heading') {
+      const data = { title:  first.children[0].value }
       tree.children.shift();
-      appendData({ title:  first.children[0].value })
+      if (second.type === 'heading') {
+        data.subTitle = second.children[0].value
+        tree.children.shift();
+      }
+      appendData(data)
     }
     return tree
   }
