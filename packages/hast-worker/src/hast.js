@@ -32,11 +32,14 @@ const createParser = ({ remark = [], rehype = [] }, extract) => {
   .use(raw)
 }
 
+const isLocal = plugin => plugin.startsWith('/') || plugin.startsWith('.')
+const getName = plugin => (isLocal(plugin) ? plugin.split('/').reverse()[0].replace('.js', '') : plugin )
 const camelize = s => s.replace(/-./g, x=>x.toUpperCase()[1])
 
 const fetchPlugin = (plugin, version = 'latest') => {
-  importScripts(`https://wzrd.in/standalone/${plugin}@${version}`)
-  return self[camelize(plugin)]
+  let pluginUrl = isLocal(plugin) ? plugin : `https://wzrd.in/standalone/${plugin}@${version}`  
+  importScripts(pluginUrl)
+  return self[camelize(getName(plugin))]
 }
 
 const mapPlugin = p => {
