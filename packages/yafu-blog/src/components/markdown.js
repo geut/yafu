@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Worker from '@geut/hast-worker'
 
-export default function Markdown({ path, children }) {
+import { getConfig } from '../config'
+
+export default function Markdown({ path, placeholder = null, children }) {
   const [post, setPost] = useState()
 
   useEffect(() => {
-    let worker
     (async () => {
+      const { plugins: { rehype, remark } } = await getConfig()
       const raw = await beaker.hyperdrive.readFile(path)
-      worker = new Worker()
+      const worker = new Worker()
       worker.onmessage = function (event) {          
         setPost(event.data)
+        worker.terminate()
       };
-      worker.postMessage({ raw, data: { path } })
+      worker.postMessage({ raw, data: { path }, config: { rehype, remark } })
     })()
 
-    return () => {
-      worker && worker.terminate()
-    }
   }, [path])
 
-  return ( post ? children(post) : null )
+  return ( post ? children(post) : placeholder )
 }

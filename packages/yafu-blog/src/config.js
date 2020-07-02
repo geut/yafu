@@ -3,6 +3,7 @@ async function configFromModule({ default: config }) {
   return {
     filter: () => true,
     sort: (a, b) => a.path > b.path ? 1 : -1,
+    plugins: { rehype: [], remark: [] },
     ...((typeof config === 'function') ? await config() : config),
   }
 }

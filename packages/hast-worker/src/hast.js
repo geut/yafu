@@ -5,13 +5,6 @@ import remark2rehype from 'remark-rehype'
 import raw from 'rehype-raw'
 import fm from 'frontmatter'
 
-const parser = unified()
-  .use(markdown)
-  // .use(remark.map(mapPlugin))
-  .use(remark2rehype, { allowDangerousHtml: true })
-  // .use(rehype.map(mapPlugin))
-  .use(raw)
-
 const extractTitle = (appendData) => {
   return () => /* attacher */ (tree) => {
     /* transformer */
@@ -29,20 +22,39 @@ const extractTitle = (appendData) => {
   }
 }
 
-const createParser = (extract) => {
+const createParser = ({ remark = [], rehype = [] }, extract) => {
   return unified()
   .use(markdown)
+  .use(remark.map(mapPlugin))
   .use(extract)
-  // .use(remark.map(mapPlugin))
   .use(remark2rehype, { allowDangerousHtml: true })
-  // .use(rehype.map(mapPlugin))
+  .use(rehype.map(mapPlugin))
   .use(raw)
 }
 
-onmessage = function({ data: { raw, data } }) {
+const isLocal = plugin => plugin.startsWith('/') || plugin.startsWith('.')
+const getName = plugin => (isLocal(plugin) ? plugin.split('/').reverse()[0].replace('.js', '') : plugin )
+const camelize = s => s.replace(/-./g, x=>x.toUpperCase()[1])
+
+const fetchPlugin = (plugin, version = 'latest') => {
+  let pluginUrl = isLocal(plugin) ? plugin : `https://wzrd.in/standalone/${plugin}@${version}`  
+  importScripts(pluginUrl)
+  return self[camelize(getName(plugin))]
+}
+
+const mapPlugin = p => {
+  if (Array.isArray(p)) {
+    const [name, options] = p
+    return [fetchPlugin(name), options]
+  }
+  return fetchPlugin(p)
+}
+
+// 
+onmessage = function({ data: { raw, data, config } }) {
   const value = fm(raw)
   
-  const parser = createParser(extractTitle(data => {
+  const parser = createParser({ ...config }, extractTitle(data => {
     value.data = {
       ...data,
       ...value.data

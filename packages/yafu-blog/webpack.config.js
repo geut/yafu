@@ -1,6 +1,7 @@
 
 const HtmlPlugin = require('html-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = {
 
@@ -13,6 +14,10 @@ module.exports = {
   },
 
   plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false
+    }),
     new HtmlPlugin({
       template: `${__dirname}/src/ui.html`,
       filename: 'ui.html'

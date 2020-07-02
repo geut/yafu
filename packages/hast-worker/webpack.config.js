@@ -2,11 +2,13 @@
 
 module.exports = {
 
-  entry: `${__dirname}/src/worker.js`,
+  entry: {
+    hast: `${__dirname}/src/hast.js`,
+  },
 
   output: {
     path: `${__dirname}/dist`,
-    filename: 'hast.worker.js'
+    filename: '[name].worker.js'
   },
 
   module: {
