@@ -2,7 +2,7 @@
 
 ## Config
 
-Create a `yafu.config.js` in your hyperdrive root.
+Create a `yafu.config.mjs` in your hyperdrive root.
 
 - export async function that returns an object:
 
